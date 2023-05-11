@@ -30,6 +30,9 @@ public class Category {
     @JoinColumn(name = "parent_category_id")
     private Category parentCategory;
 
+    @OneToMany(mappedBy = "parentCategory", fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Category> childCategories = new ArrayList<>();
+
     @OneToMany(mappedBy = "category", fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 }
