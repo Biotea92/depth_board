@@ -26,6 +26,8 @@ public class Category {
 
     private int sequence;
 
+    private boolean hasPost;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "parent_category_id")
     private Category parentCategory;
@@ -41,6 +43,7 @@ public class Category {
         this.depth = depth;
         this.sequence = sequence;
         this.parentCategory = parentCategory;
+        this.hasPost = false;
     }
 
     public static Category create(String title, int nextSequence) {
@@ -49,6 +52,8 @@ public class Category {
 
     public static Category createWithParent(String title, Category parentCategory) {
         int nextSequence = parentCategory.getChildCategories().size() + 1;
-        return new Category(title, 2, nextSequence, parentCategory);
+        Category category = new Category(title, 2, nextSequence, parentCategory);
+        parentCategory.childCategories.add(category);
+        return category;
     }
 }
