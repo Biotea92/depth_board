@@ -26,6 +26,10 @@ public class Category {
 
     private int sequence;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "parent_category_id")
+    private Category parentCategory;
+
     @OneToMany(mappedBy = "post", fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 }
