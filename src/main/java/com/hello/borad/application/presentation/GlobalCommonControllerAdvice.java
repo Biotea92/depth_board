@@ -1,4 +1,4 @@
-package com.hello.borad.presentation;
+package com.hello.borad.application.presentation;
 
 import com.hello.borad.dto.ErrorResponse;
 import com.hello.borad.exception.CustomException;
