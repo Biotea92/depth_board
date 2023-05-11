@@ -26,6 +26,29 @@ public class Category {
 
     private int sequence;
 
-    @OneToMany(mappedBy = "post", fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "parent_category_id")
+    private Category parentCategory;
+
+    @OneToMany(mappedBy = "parentCategory", fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Category> childCategories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "category", fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
+
+    private Category(String title, int depth, int sequence, Category parentCategory) {
+        this.title = title;
+        this.depth = depth;
+        this.sequence = sequence;
+        this.parentCategory = parentCategory;
+    }
+
+    public static Category create(String title, int nextSequence) {
+        return new Category(title, 1, nextSequence, null);
+    }
+
+    public static Category createWithParent(String title, Category parentCategory) {
+        int nextSequence = parentCategory.getChildCategories().size() + 1;
+        return new Category(title, 2, nextSequence, parentCategory);
+    }
 }

@@ -17,7 +17,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @RestControllerAdvice
 public class GlobalCommonControllerAdvice {
 
-    private static final String LOG_FORMAT = "Body={}";
+    private static final String LOG_FORMAT = "Error={}";
     private static final String INVALID_REQUEST_MESSAGE = "잘못된 요청입니다.";
 
     @ExceptionHandler(CustomException.class)
@@ -41,7 +41,7 @@ public class GlobalCommonControllerAdvice {
     })
     public ErrorResponse invalidRequestHandler(BindException e) {
         ErrorResponse body = ErrorResponse.builder()
-                .code(400)
+                .code(BAD_REQUEST.value())
                 .message(INVALID_REQUEST_MESSAGE)
                 .build();
 
@@ -55,9 +55,8 @@ public class GlobalCommonControllerAdvice {
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     @ExceptionHandler(RuntimeException.class)
     public ErrorResponse handleInternalServerError(RuntimeException e) {
-
         ErrorResponse body = ErrorResponse.builder()
-                .code(500)
+                .code(INTERNAL_SERVER_ERROR.value())
                 .message(e.getMessage())
                 .build();
 

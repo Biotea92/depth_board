@@ -1,0 +1,21 @@
+= API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlights
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== *BOARD*
+
+'''
+
+=== 카테고리 등록
+==== Curl
+include::{snippets}/board/create-category/curl-request.adoc[]
+==== Request
+include::{snippets}/board/create-category/http-request.adoc[]
+include::{snippets}/board/create-category/request-fields.adoc[]
+==== Response
+include::{snippets}/board/create-category/http-response.adoc[]
+include::{snippets}/board/create-category/response-fields.adoc[]
