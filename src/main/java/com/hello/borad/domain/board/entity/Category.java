@@ -68,4 +68,8 @@ public class Category {
         this.sequence = sequence;
         parentCategory.childCategories.add(this);
     }
+
+    public boolean isDepthTwo() {
+        return this.depth == 2;
+    }
 }
