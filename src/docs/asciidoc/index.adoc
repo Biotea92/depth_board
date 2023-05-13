@@ -30,3 +30,15 @@ include::{snippets}/board/get-categories/http-request.adoc[]
 ==== Response
 include::{snippets}/board/get-categories/http-response.adoc[]
 include::{snippets}/board/get-categories/response-fields.adoc[]
+
+'''
+
+=== 카테고리 전체 수정
+==== Curl
+include::{snippets}/board/edit-categories/curl-request.adoc[]
+==== Request
+include::{snippets}/board/edit-categories/http-request.adoc[]
+include::{snippets}/board/edit-categories/request-fields.adoc[]
+==== Response
+include::{snippets}/board/edit-categories/http-response.adoc[]
+include::{snippets}/board/edit-categories/response-fields.adoc[]

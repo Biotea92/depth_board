@@ -141,22 +141,20 @@ class BoardControllerDocsTest {
     @DisplayName("카테고리 전체를 수정한다.")
     void editCategories() throws Exception {
         // given
-        Category parentCategory1 = CategoryFixtureFactory.create("카테고리 대분류1", 1, 1);
-        Category parentCategory2 = CategoryFixtureFactory.create("카테고리 대분류2", 1, 2);
-        Category parentCategory3 = CategoryFixtureFactory.create("카테고리 대분류3", 1, 3);
+        Category parentCategory1 = CategoryFixtureFactory.create("test_title", 1, 1);
+        Category parentCategory2 = CategoryFixtureFactory.create("test_title", 1, 2);
+        Category parentCategory3 = CategoryFixtureFactory.create("test_title", 1, 3);
         categoryRepository.saveAll(List.of(parentCategory1, parentCategory2, parentCategory3));
 
-        Category childCategory1_1 = CategoryFixtureFactory.create("카테고리 1-1", 2, 1, parentCategory1);
-        Category childCategory1_2 = CategoryFixtureFactory.create("카테고리 1-2", 2, 2, parentCategory1);
-        Category childCategory1_3 = CategoryFixtureFactory.create("카테고리 1-3", 2, 3, parentCategory1);
+        Category childCategory1_1 = CategoryFixtureFactory.create("test_title", 2, 1, parentCategory1);
+        Category childCategory1_2 = CategoryFixtureFactory.create("test_title", 2, 2, parentCategory1);
+        Category childCategory1_3 = CategoryFixtureFactory.create("test_title", 2, 3, parentCategory1);
         categoryRepository.saveAll(List.of(childCategory1_1, childCategory1_2, childCategory1_3));
-        parentCategory1.getChildCategories().addAll(List.of(childCategory1_1, childCategory1_2, childCategory1_3));
 
-        Category childCategory2_1 = CategoryFixtureFactory.create("카테고리 2-1", 2, 1, parentCategory2);
-        Category childCategory2_2 = CategoryFixtureFactory.create("카테고리 2-2", 2, 2, parentCategory2);
-        Category childCategory2_3 = CategoryFixtureFactory.create("카테고리 2-3", 2, 3, parentCategory2);
+        Category childCategory2_1 = CategoryFixtureFactory.create("test_title", 2, 1, parentCategory2);
+        Category childCategory2_2 = CategoryFixtureFactory.create("test_title", 2, 2, parentCategory2);
+        Category childCategory2_3 = CategoryFixtureFactory.create("test_title", 2, 3, parentCategory2);
         categoryRepository.saveAll(List.of(childCategory2_1, childCategory2_2, childCategory2_3));
-        parentCategory2.getChildCategories().addAll(List.of(childCategory2_1, childCategory2_2, childCategory2_3));
 
         CategoryEditRequest request = new CategoryEditRequest(
                 List.of(new ParentCategoryEditRequest(
