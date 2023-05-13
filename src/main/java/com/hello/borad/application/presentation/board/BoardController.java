@@ -1,9 +1,6 @@
 package com.hello.borad.application.presentation.board;
 
-import com.hello.borad.application.usecase.board.CreateCategoryUsecase;
-import com.hello.borad.application.usecase.board.CreatePostUsecase;
-import com.hello.borad.application.usecase.board.EditCategoriesUsecase;
-import com.hello.borad.application.usecase.board.GetCategoriesUsecase;
+import com.hello.borad.application.usecase.board.*;
 import com.hello.borad.dto.request.CategoryCreateRequest;
 import com.hello.borad.dto.request.CategoryEditRequest;
 import com.hello.borad.dto.request.PostCreateRequest;
@@ -25,6 +22,7 @@ public class BoardController {
     private final GetCategoriesUsecase getCategoriesUsecase;
     private final EditCategoriesUsecase editCategoriesUsecase;
     private final CreatePostUsecase createPostUsecase;
+    private final GetPostsUsecase getPostsUsecase;
 
     @PostMapping("/category")
     public CategoryResponse createCategory(@RequestBody @Validated CategoryCreateRequest request) {
@@ -44,5 +42,10 @@ public class BoardController {
     @PostMapping("/category/{categoryId}/post")
     public PostResponse createPost(@PathVariable Long categoryId, @RequestBody @Validated PostCreateRequest request) {
         return createPostUsecase.execute(categoryId, request);
+    }
+
+    @GetMapping("/category/{categoryId}/posts")
+    public List<PostResponse> getPosts(@PathVariable Long categoryId) {
+        return getPostsUsecase.execute(categoryId);
     }
 }
