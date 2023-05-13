@@ -28,6 +28,10 @@ public class CategoryFixtureFactory {
                 .and(ofType(int.class))
                 .and(inClass(Category.class));
 
+        var hasPostPredicate = named("hasPost")
+                .and(ofType(boolean.class))
+                .and(inClass(Category.class));
+
         var parentCategoryPredicate = named("parentCategory")
                 .and(ofType(Category.class))
                 .and(inClass(Category.class));
@@ -45,6 +49,7 @@ public class CategoryFixtureFactory {
                 .randomize(titlePredicate, () -> title)
                 .randomize(depthPredicate, () -> depth)
                 .randomize(sequencePredicate, () -> sequence)
+                .randomize(hasPostPredicate, () -> false)
                 .randomize(parentCategoryPredicate, () -> null)
                 .randomize(childCategoriesPredicate, ArrayList::new)
                 .randomize(postsPredicate, ArrayList::new);
@@ -69,6 +74,10 @@ public class CategoryFixtureFactory {
                 .and(ofType(int.class))
                 .and(inClass(Category.class));
 
+        var hasPostPredicate = named("hasPost")
+                .and(ofType(boolean.class))
+                .and(inClass(Category.class));
+
         var parentCategoryPredicate = named("parentCategory")
                 .and(ofType(Category.class))
                 .and(inClass(Category.class));
@@ -86,6 +95,7 @@ public class CategoryFixtureFactory {
                 .randomize(titlePredicate, () -> title)
                 .randomize(depthPredicate, () -> depth)
                 .randomize(sequencePredicate, () -> sequence)
+                .randomize(hasPostPredicate, () -> false)
                 .randomize(parentCategoryPredicate, () -> parentCategory)
                 .randomize(childCategoriesPredicate, ArrayList::new)
                 .randomize(postsPredicate, ArrayList::new);

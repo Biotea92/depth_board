@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hello.borad.domain.board.entity.Category;
 import com.hello.borad.domain.board.repository.CategoryRepository;
 import com.hello.borad.dto.request.CategoryCreateRequest;
+import com.hello.borad.dto.request.CategoryEditRequest;
+import com.hello.borad.dto.request.CategoryEditRequest.ChildCategoryEditRequest;
+import com.hello.borad.dto.request.CategoryEditRequest.ParentCategoryEditRequest;
 import com.hello.borad.utils.fixture.CategoryFixtureFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,8 +27,7 @@ import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.modifyHeaders;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -119,6 +121,87 @@ class BoardControllerDocsTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document(DOCUMENT_IDENTIFIER,
+                        responseFields(
+                                fieldWithPath("[].categoryId").description("대분류 category id"),
+                                fieldWithPath("[].title").description("대분류 category title"),
+                                fieldWithPath("[].depth").description("대분류 깊이"),
+                                fieldWithPath("[].sequence").description("대분류 순서"),
+                                fieldWithPath("[].hasPost").description("대분류의 게시글 여부"),
+                                fieldWithPath("[].childCategoryResponses").description("자식 카테고리"),
+                                fieldWithPath("[].childCategoryResponses[].categoryId").description("소분류 category id"),
+                                fieldWithPath("[].childCategoryResponses[].title").description("소분류 category title"),
+                                fieldWithPath("[].childCategoryResponses[].depth").description("소분류 깊이"),
+                                fieldWithPath("[].childCategoryResponses[].sequence").description("소분류 순서"),
+                                fieldWithPath("[].childCategoryResponses[].hasPost").description("소분류 게시글 여부")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("카테고리 전체를 수정한다.")
+    void editCategories() throws Exception {
+        // given
+        Category parentCategory1 = CategoryFixtureFactory.create("카테고리 대분류1", 1, 1);
+        Category parentCategory2 = CategoryFixtureFactory.create("카테고리 대분류2", 1, 2);
+        Category parentCategory3 = CategoryFixtureFactory.create("카테고리 대분류3", 1, 3);
+        categoryRepository.saveAll(List.of(parentCategory1, parentCategory2, parentCategory3));
+
+        Category childCategory1_1 = CategoryFixtureFactory.create("카테고리 1-1", 2, 1, parentCategory1);
+        Category childCategory1_2 = CategoryFixtureFactory.create("카테고리 1-2", 2, 2, parentCategory1);
+        Category childCategory1_3 = CategoryFixtureFactory.create("카테고리 1-3", 2, 3, parentCategory1);
+        categoryRepository.saveAll(List.of(childCategory1_1, childCategory1_2, childCategory1_3));
+        parentCategory1.getChildCategories().addAll(List.of(childCategory1_1, childCategory1_2, childCategory1_3));
+
+        Category childCategory2_1 = CategoryFixtureFactory.create("카테고리 2-1", 2, 1, parentCategory2);
+        Category childCategory2_2 = CategoryFixtureFactory.create("카테고리 2-2", 2, 2, parentCategory2);
+        Category childCategory2_3 = CategoryFixtureFactory.create("카테고리 2-3", 2, 3, parentCategory2);
+        categoryRepository.saveAll(List.of(childCategory2_1, childCategory2_2, childCategory2_3));
+        parentCategory2.getChildCategories().addAll(List.of(childCategory2_1, childCategory2_2, childCategory2_3));
+
+        CategoryEditRequest request = new CategoryEditRequest(
+                List.of(new ParentCategoryEditRequest(
+                                parentCategory2.getId(),
+                                "카테고리 대분류1",
+                                List.of(new ChildCategoryEditRequest(childCategory1_3.getId(), "카테고리 소분류 1-1", List.of()),
+                                        new ChildCategoryEditRequest(childCategory1_2.getId(), "카테고리 소분류 1-2", List.of()),
+                                        new ChildCategoryEditRequest(parentCategory3.getId(), "카테고리 소분류 1-3", List.of())
+                                )
+                        ),
+                        new ParentCategoryEditRequest(
+                                childCategory2_1.getId(),
+                                "카테고리 대분류2",
+                                List.of(new ChildCategoryEditRequest(-1L, "카테고리 소분류 2-1", List.of()))
+                        ),
+                        new ParentCategoryEditRequest(
+                                -1L,
+                                "카테고리 대분류3",
+                                List.of()
+                        )
+                ),
+                List.of(parentCategory1.getId(), childCategory1_1.getId(), childCategory2_2.getId(), childCategory2_3.getId())
+        );
+        String json = objectMapper.writeValueAsString(request);
+
+        System.out.println(json);
+
+        // expected
+        mockMvc.perform(put("/api/board/category")
+                        .contentType(APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document(DOCUMENT_IDENTIFIER,
+                        requestFields(
+                                fieldWithPath("parentCategories").description("부모 category"),
+                                fieldWithPath("parentCategories[].categoryId").description("부모 category id 새로운 카테고리면 -1을 입력해주세요."),
+                                fieldWithPath("parentCategories[].title").description("부모 category title"),
+                                fieldWithPath("parentCategories[].childCategories").description("자식 category"),
+                                fieldWithPath("parentCategories[].childCategories[].categoryId").description("자식 category id 새로운 카테고리면 -1을 입력해주세요."),
+                                fieldWithPath("parentCategories[].childCategories[].title").description("자식 category title"),
+                                fieldWithPath("parentCategories[].childCategories[].childCategories").description("빈 리스트[] 거나 null 이어야 합니다."),
+                                fieldWithPath("removedCategoryIds").description("삭제 할 카테고리 Ids")
+
+                        ),
                         responseFields(
                                 fieldWithPath("[].categoryId").description("대분류 category id"),
                                 fieldWithPath("[].title").description("대분류 category title"),
