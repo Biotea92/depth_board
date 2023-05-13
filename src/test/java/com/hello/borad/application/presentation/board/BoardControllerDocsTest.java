@@ -7,6 +7,7 @@ import com.hello.borad.dto.request.CategoryCreateRequest;
 import com.hello.borad.dto.request.CategoryEditRequest;
 import com.hello.borad.dto.request.CategoryEditRequest.ChildCategoryEditRequest;
 import com.hello.borad.dto.request.CategoryEditRequest.ParentCategoryEditRequest;
+import com.hello.borad.dto.request.PostCreateRequest;
 import com.hello.borad.utils.fixture.CategoryFixtureFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,6 +32,8 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.modifyHeaders;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -212,6 +215,45 @@ class BoardControllerDocsTest {
                                 fieldWithPath("[].childCategoryResponses[].depth").description("소분류 깊이"),
                                 fieldWithPath("[].childCategoryResponses[].sequence").description("소분류 순서"),
                                 fieldWithPath("[].childCategoryResponses[].hasPost").description("소분류 게시글 여부")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("글은 등록되어야 한다.")
+    void createPost() throws Exception {
+        // given
+        Category parentCategory = CategoryFixtureFactory.create("카테고리 제목", 1, 1);
+        Category childCategory = CategoryFixtureFactory.create("test_title", 2, 1, parentCategory);
+        categoryRepository.save(parentCategory);
+        categoryRepository.save(childCategory);
+
+        PostCreateRequest request = new PostCreateRequest("제목", "내용");
+        String json = objectMapper.writeValueAsString(request);
+
+        // expected
+        mockMvc.perform(post("/api/board/category/{categoryId}/post", childCategory.getId())
+                        .contentType(APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk())
+                .andDo(document(DOCUMENT_IDENTIFIER,
+                        pathParameters(
+                                parameterWithName("categoryId").description("글 등록할 카테고리 id")
+                        ),
+                        requestFields(
+                                fieldWithPath("title").description("글 제목"),
+                                fieldWithPath("content").description("글 내용")
+                        ),
+                        responseFields(
+                                fieldWithPath("postId").description("post id"),
+                                fieldWithPath("title").description("post 제목"),
+                                fieldWithPath("content").description("post 내용"),
+                                fieldWithPath("createdAt").description("post 등록일"),
+                                fieldWithPath("categoryResponse").description("글의 카테고리"),
+                                fieldWithPath("categoryResponse.categoryId").description("category id"),
+                                fieldWithPath("categoryResponse.title").description("카테고리 제목"),
+                                fieldWithPath("categoryResponse.depth").description("카테고리 depth"),
+                                fieldWithPath("categoryResponse.sequence").description("카테고리 순서")
                         )
                 ));
     }
