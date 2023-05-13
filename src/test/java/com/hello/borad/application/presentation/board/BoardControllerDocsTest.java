@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +33,9 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ActiveProfiles("test")
 @SpringBootTest
-@ExtendWith(RestDocumentationExtension.class)
+@ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @Transactional
 class BoardControllerDocsTest {
 
@@ -53,6 +56,8 @@ class BoardControllerDocsTest {
                         .withRequestDefaults(prettyPrint())
                         .withResponseDefaults(prettyPrint(), modifyHeaders().remove("Vary")))
                 .build();
+
+        categoryRepository.deleteAll();
     }
 
     @Test
@@ -62,7 +67,7 @@ class BoardControllerDocsTest {
         Category parentCategory = CategoryFixtureFactory.create("카테고리 제목", 1, 1);
         categoryRepository.save(parentCategory);
 
-        CategoryCreateRequest request = new CategoryCreateRequest("카테고리1", 1L);
+        CategoryCreateRequest request = new CategoryCreateRequest("카테고리1", parentCategory.getId());
         String json = objectMapper.writeValueAsString(request);
 
         // expected
