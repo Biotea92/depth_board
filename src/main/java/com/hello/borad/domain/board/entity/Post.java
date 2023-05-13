@@ -22,6 +22,7 @@ public class Post {
 
     private String title;
 
+    @Lob
     private String content;
 
     @ManyToOne(fetch = LAZY)
@@ -35,5 +36,15 @@ public class Post {
     @PrePersist
     private void onPrePersist() {
         this.createdAt = LocalDateTime.now();
+    }
+
+    private Post(String title, String content, Category category) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+    }
+
+    public static Post create(String title, String content, Category category) {
+        return new Post(title, content, category);
     }
 }

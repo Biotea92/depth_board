@@ -1,0 +1,72 @@
+= API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlights
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== *BOARD*
+
+'''
+
+=== 카테고리 등록
+==== Curl
+include::{snippets}/board/create-category/curl-request.adoc[]
+==== Request
+include::{snippets}/board/create-category/http-request.adoc[]
+include::{snippets}/board/create-category/request-fields.adoc[]
+==== Response
+include::{snippets}/board/create-category/http-response.adoc[]
+include::{snippets}/board/create-category/response-fields.adoc[]
+
+'''
+
+=== 카테고리 조회
+==== Curl
+include::{snippets}/board/get-categories/curl-request.adoc[]
+==== Request
+include::{snippets}/board/get-categories/http-request.adoc[]
+==== Response
+include::{snippets}/board/get-categories/http-response.adoc[]
+include::{snippets}/board/get-categories/response-fields.adoc[]
+
+'''
+
+=== 카테고리 전체 수정
+==== Curl
+include::{snippets}/board/edit-categories/curl-request.adoc[]
+==== Request
+include::{snippets}/board/edit-categories/http-request.adoc[]
+include::{snippets}/board/edit-categories/request-fields.adoc[]
+==== Response
+include::{snippets}/board/edit-categories/http-response.adoc[]
+include::{snippets}/board/edit-categories/response-fields.adoc[]
+
+
+== *BOARD*
+
+'''
+
+=== 글 등록
+==== Curl
+include::{snippets}/board/create-post/curl-request.adoc[]
+==== Request
+include::{snippets}/board/create-post/http-request.adoc[]
+include::{snippets}/board/create-post/path-parameters.adoc[]
+include::{snippets}/board/create-post/request-fields.adoc[]
+==== Response
+include::{snippets}/board/create-post/http-response.adoc[]
+include::{snippets}/board/create-post/response-fields.adoc[]
+
+'''
+
+=== 글 조회
+==== Curl
+include::{snippets}/board/get-post/curl-request.adoc[]
+==== Request
+include::{snippets}/board/get-post/http-request.adoc[]
+include::{snippets}/board/get-post/path-parameters.adoc[]
+==== Response
+include::{snippets}/board/get-post/http-response.adoc[]
+include::{snippets}/board/get-post/response-fields.adoc[]
