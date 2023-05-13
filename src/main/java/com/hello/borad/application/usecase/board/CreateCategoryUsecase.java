@@ -16,10 +16,10 @@ public class CreateCategoryUsecase {
 
     public CategoryResponse execute(CategoryCreateRequest request) {
         if (request.parentCategoryId().equals(NO_PARENT_CATEGORY_ID)) {
-            Category newCategory = categoryWriteService.register(request.title());
+            Category newCategory = categoryWriteService.registerDepthOneCategory(request.title());
             return CategoryResponse.from(newCategory);
         }
-        Category newCategory = categoryWriteService.register(request.title(), request.parentCategoryId());
+        Category newCategory = categoryWriteService.registerDepthTwoCategory(request.title(), request.parentCategoryId());
         return CategoryResponse.from(newCategory);
     }
 }

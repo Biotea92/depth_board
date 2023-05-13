@@ -46,14 +46,26 @@ public class Category {
         this.hasPost = false;
     }
 
-    public static Category create(String title, int nextSequence) {
-        return new Category(title, 1, nextSequence, null);
+    public static Category create(String title, int depth, int sequence) {
+        return new Category(title, depth, sequence, null);
     }
 
-    public static Category createWithParent(String title, Category parentCategory) {
-        int nextSequence = parentCategory.getChildCategories().size() + 1;
-        Category category = new Category(title, 2, nextSequence, parentCategory);
+    public static Category createWithParent(String title, int depth, int sequence, Category parentCategory) {
+        Category category = new Category(title, depth, sequence, parentCategory);
         parentCategory.childCategories.add(category);
         return category;
+    }
+
+    public void update(String title, int depth, int sequence) {
+        this.title = title;
+        this.depth = depth;
+        this.sequence = sequence;
+    }
+
+    public void update(String title, int depth, int sequence, Category parentCategory) {
+        this.title = title;
+        this.depth = depth;
+        this.sequence = sequence;
+        parentCategory.childCategories.add(this);
     }
 }
