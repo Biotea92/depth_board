@@ -2,7 +2,9 @@ package com.hello.borad.application.presentation.board;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hello.borad.domain.board.entity.Category;
+import com.hello.borad.domain.board.entity.Post;
 import com.hello.borad.domain.board.repository.CategoryRepository;
+import com.hello.borad.domain.board.repository.PostRepository;
 import com.hello.borad.dto.request.CategoryCreateRequest;
 import com.hello.borad.dto.request.CategoryEditRequest;
 import com.hello.borad.dto.request.CategoryEditRequest.ChildCategoryEditRequest;
@@ -23,7 +25,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.LongStream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -47,6 +51,8 @@ class BoardControllerDocsTest {
     ObjectMapper objectMapper;
     @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    PostRepository postRepository;
     @Autowired
     WebApplicationContext webApplicationContext;
     private static final String DOCUMENT_IDENTIFIER = "board/{method-name}/";
@@ -254,6 +260,41 @@ class BoardControllerDocsTest {
                                 fieldWithPath("categoryResponse.title").description("카테고리 제목"),
                                 fieldWithPath("categoryResponse.depth").description("카테고리 depth"),
                                 fieldWithPath("categoryResponse.sequence").description("카테고리 순서")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("글은 조회되어야 한다.")
+    void getPost() throws Exception {
+        // given
+        Category parentCategory = CategoryFixtureFactory.create("카테고리 제목", 1, 1);
+        Category childCategory = CategoryFixtureFactory.create("test_title", 2, 1, parentCategory);
+        categoryRepository.save(parentCategory);
+        categoryRepository.save(childCategory);
+
+        List<Post> posts = new ArrayList<>(LongStream.range(1L, 6L)
+                .mapToObj(i -> Post.create("제목" + i, "내용" + i, childCategory))
+                .toList());
+        postRepository.saveAll(posts);
+
+        // expected
+        mockMvc.perform(get("/api/board/category/{categoryId}/posts", childCategory.getId()))
+                .andExpect(status().isOk())
+                .andDo(document(DOCUMENT_IDENTIFIER,
+                        pathParameters(
+                                parameterWithName("categoryId").description("글 조회 할 카테고리 id")
+                        ),
+                        responseFields(
+                                fieldWithPath("[].postId").description("post id"),
+                                fieldWithPath("[].title").description("post 제목"),
+                                fieldWithPath("[].content").description("post 내용"),
+                                fieldWithPath("[].createdAt").description("post 등록일"),
+                                fieldWithPath("[].categoryResponse").description("글의 카테고리"),
+                                fieldWithPath("[].categoryResponse.categoryId").description("category id"),
+                                fieldWithPath("[].categoryResponse.title").description("카테고리 제목"),
+                                fieldWithPath("[].categoryResponse.depth").description("카테고리 depth"),
+                                fieldWithPath("[].categoryResponse.sequence").description("카테고리 순서")
                         )
                 ));
     }
