@@ -64,11 +64,11 @@ class BoardControllerDocsTest {
                         .operationPreprocessors()
                         .withRequestDefaults(prettyPrint())
                         .withResponseDefaults(prettyPrint(), modifyHeaders().remove("Vary")))
-                .apply(documentationConfiguration(restDocumentation)
-                        .uris()
-                        .withScheme("https")
-                        .withHost("accura.com")
-                        .withPort(443))
+//                .apply(documentationConfiguration(restDocumentation)
+//                        .uris()
+//                        .withScheme("https")
+//                        .withHost("accura.com")
+//                        .withPort(443))
                 .build();
 
         categoryRepository.deleteAll();
