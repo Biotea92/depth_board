@@ -4,7 +4,6 @@
         <div v-for="category in tmpCategories" :key="category.categoryId">
             <CategoryComponent
                 :category="category"
-                title="제목"
             >
 
             </CategoryComponent>
@@ -23,6 +22,6 @@ const tmpCategories = ref<CategoryResponse[]>([]);
 
 onMounted(async () => {
     categoryResponses.value = await categoryApi.getCategories();
-    tmpCategories.value = categoryResponses.value;
+    tmpCategories.value = categoryResponses.value.slice();
 })
 </script>
