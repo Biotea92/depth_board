@@ -27,7 +27,8 @@
                 ghost-class="ghost-card"
                 :animation="200"
                 @end="dragEnd"
-                :checkMove="checkMove"
+                @add="dragAndAdd"
+                :move="checkMove"
                 group="group"
         >
 <!--            <transition-group name="fade" tag="v-list">-->
@@ -48,7 +49,7 @@
                                 <v-btn icon @click="editCategory(parentIndex)" class="mr-2">
                                     <v-icon color="grey-lighten-0">mdi-pencil</v-icon>
                                 </v-btn>
-                                <v-btn icon @click="deleteCategory(parentIndex, '하위 카테고리가 모두 삭제 됩니다. 삭제하시겠습니까?')">
+                                <v-btn icon @click="deleteCategory(parentIndex, '해당 카테고리, 하위 카테고리, 하위 게시물이 모두 삭제됩니다. 삭제하시겠습니까?')">
                                     <v-icon color="grey-lighten-0">mdi-delete</v-icon>
                                 </v-btn>
                             </v-col>
@@ -59,7 +60,7 @@
                                 ghost-class="ghost-card"
                                 :animation="200"
                                 @end="dragEnd"
-                                :checkMove="checkMove"
+                                :move="checkMove"
                                 group="group"
                         >
 <!--                            <transition-group name="fade" tag="v-list">-->
@@ -247,7 +248,7 @@ const editCategoryTitle = () => {
 }
 
 const deleteCategory = (index: number, message: string) => {
-    confirmDialogMessage.value = message;
+    confirmDialogMessage.value = message
     confirmCallback = () => {
         tmpCategories.value.splice(index, 1);
     };
@@ -271,7 +272,11 @@ const editChildCategoryTitle = () => {
 }
 
 const deleteChildCategory = (category: any, index: number, message: string) => {
-    confirmDialogMessage.value = message;
+    if (category.childCategoryResponses[index].hasPost !== null && category.childCategoryResponses[index].hasPost) {
+        confirmDialogMessage.value = message + ' (하위 게시물이 존재합니다.)';
+    } else {
+        confirmDialogMessage.value = message + ' (하위 게시물이 없습니다.)';
+    }
     confirmCallback = () => {
         category.childCategoryResponses.splice(index, 1);
     };
@@ -279,9 +284,29 @@ const deleteChildCategory = (category: any, index: number, message: string) => {
 };
 
 const checkMove = () => {
-    // here you can add your custom logic
+    // 움직일 때마다 반환됨
+    // if (event.draggedContext.element.title === '카테고리1') {
+    //     return false;
+    // } else {
+    //     console.log('event', event.draggedContext.element)
+    // }
+    // event.relatedContext.element.title
+
+    /*
+    draggedContext 끌어가는 요소
+    relatedContext 끌려가서 현재 요소
+    */
+
+
     return true;
 };
+
+const dragAndAdd = (event) => {
+    //
+    if (event.removed.element.hasPost !== null && event.removed.element.hasPost === true && event.added.element.hasPost === false) {
+        //
+    }
+}
 
 const dragEnd = () => {
     console.log('response', categoryResponses.value)
@@ -292,6 +317,12 @@ const dragEnd = () => {
 </script>
 
 <style scoped>
+.ghost-card {
+    opacity: 0.5;
+    background: #F7FAFC;
+    border: 1px solid #4299e1;
+}
+
 .inner-draggable {
     margin-left: 3rem;
     margin-right: 3rem;
