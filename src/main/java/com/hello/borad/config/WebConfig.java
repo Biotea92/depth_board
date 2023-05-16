@@ -7,12 +7,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    private final static String FRONT_END_LOCAL = "http://localhost:8080";
+    private final static String FRONT_END_LOCAL = "http://localhost:8083,http://localhost:8080";
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
                 .allowedMethods("GET", "POST", "HEAD", "PUT", "PATCH", "DELETE", "TRACE", "OPTIONS")
-                .allowedOrigins(FRONT_END_LOCAL);
+                .allowedOrigins(FRONT_END_LOCAL.split(","));
     }
 }

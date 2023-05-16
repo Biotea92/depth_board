@@ -1,10 +1,6 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-      <v-btn variant="outlined">
-          Button
-      </v-btn>
-
   </div>
 </template>
 

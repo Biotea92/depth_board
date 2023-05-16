@@ -146,7 +146,8 @@ class BoardControllerDocsTest {
                                 fieldWithPath("[].childCategoryResponses[].title").description("소분류 category title"),
                                 fieldWithPath("[].childCategoryResponses[].depth").description("소분류 깊이"),
                                 fieldWithPath("[].childCategoryResponses[].sequence").description("소분류 순서"),
-                                fieldWithPath("[].childCategoryResponses[].hasPost").description("소분류 게시글 여부")
+                                fieldWithPath("[].childCategoryResponses[].hasPost").description("소분류 게시글 여부"),
+                                fieldWithPath("[].childCategoryResponses[].childCategoryResponses").description("소분류의 자식 리스트")
                         )
                 ));
     }
@@ -225,7 +226,8 @@ class BoardControllerDocsTest {
                                 fieldWithPath("[].childCategoryResponses[].title").description("소분류 category title"),
                                 fieldWithPath("[].childCategoryResponses[].depth").description("소분류 깊이"),
                                 fieldWithPath("[].childCategoryResponses[].sequence").description("소분류 순서"),
-                                fieldWithPath("[].childCategoryResponses[].hasPost").description("소분류 게시글 여부")
+                                fieldWithPath("[].childCategoryResponses[].hasPost").description("소분류 게시글 여부"),
+                                fieldWithPath("[].childCategoryResponses[].childCategoryResponses").description("소분류의 자식 리스트")
                         )
                 ));
     }

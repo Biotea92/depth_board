@@ -4,5 +4,5 @@ export interface CategoryResponse {
     depth: number;
     sequence: number;
     hasPost: boolean;
-    childCategoryResponses?: CategoryResponse[];
+    childCategoryResponses: CategoryResponse[];
 }
