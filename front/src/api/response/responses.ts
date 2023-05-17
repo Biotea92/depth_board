@@ -12,6 +12,6 @@ export interface PostResponse {
     postId: number;
     title: string;
     content: string;
-    createAt: string;
+    createdAt: string;
     categoryResponse?: CategoryResponse
 }

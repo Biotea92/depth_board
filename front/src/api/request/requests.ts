@@ -3,3 +3,8 @@ export interface CategoryRequest {
     title: string;
     childCategories?: CategoryRequest[];
 }
+
+export interface PostRequest {
+    title: string;
+    content: string;
+}
