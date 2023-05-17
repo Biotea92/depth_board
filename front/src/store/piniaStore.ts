@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {ref} from "vue";
 import {CategoryResponse} from "@/api/response/responses";
 import categoryApi from "@/api/categoryApi";
+import {CategoryRequest} from "@/api/request/requests";
 
 export const useCategoryStore = defineStore('category', () => {
     const categories = ref<CategoryResponse[]>([]);
@@ -10,5 +11,9 @@ export const useCategoryStore = defineStore('category', () => {
         categories.value = await categoryApi.getCategories();
     })
 
-    return { categories , setCategories }
+    const updateCategories = (async (parentCategories: CategoryRequest[], removedCategoryIds: number[]) => {
+        categories.value = await categoryApi.putCategories(parentCategories, removedCategoryIds);
+    })
+
+    return { categories , setCategories , updateCategories}
 })

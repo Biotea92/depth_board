@@ -1,25 +1,19 @@
 <template>
     <div class="category">
+        <v-alert
+                density="compact"
+                type="warning"
+                variant="tonal"
+                transition="slide-y-transition"
+                v-model="alert"
+        >
+            {{ alertMessage }}
+        </v-alert>
         <h1>Category Setting</h1>
         <v-row justify="end" class="mr-1">
-            <v-btn
-                    class="ml-3"
-                    variant="outlined"
-                    @click="addDialog = true"
-            >ADD
-            </v-btn>
-            <v-btn
-                    class="ml-3"
-                    :disabled="!isSaveDisabled"
-                    variant="outlined"
-            >SAVE
-            </v-btn>
-            <v-btn
-                    class="ml-3"
-                    variant="outlined"
-                    @click="cancel"
-            >CANCEL
-            </v-btn>
+            <v-btn class="ml-3" variant="outlined" @click="addDialog = true">ADD</v-btn>
+            <v-btn class="ml-3" :disabled="!isSaveDisabled" variant="outlined" @click="save">SAVE</v-btn>
+            <v-btn class="ml-3" variant="outlined" @click="cancel">CANCEL</v-btn>
         </v-row>
         <VueDraggableNext
                 class="dragArea list-group w-full"
@@ -27,75 +21,70 @@
                 ghost-class="ghost-card"
                 :animation="200"
                 @end="dragEnd"
-                @add="dragAndAdd"
                 :move="checkMove"
                 group="group"
         >
-<!--            <transition-group name="fade" tag="v-list">-->
-                <v-list-item
-                        v-for="(category, parentIndex) in tmpCategories"
-                        :key="category.categoryId !== -1 ? category.categoryId : category.tempId"
-                        class="mt-3 cursor-move cursor-pointer"
-                >
-                    <v-card variant="outlined" class="card-padding">
-                        <v-row>
-                            <v-col cols="8">
-                                <v-list-item-title>
-                                    {{ category.title }}
-                                </v-list-item-title>
-                            </v-col>
+            <v-list-item
+                    v-for="(category, parentIndex) in tmpCategories"
+                    :key="category.categoryId !== -1 ? category.categoryId : category.tempId"
+                    class="mt-3 cursor-move cursor-pointer"
+            >
+                <v-card variant="outlined" class="card-padding">
+                    <v-row>
+                        <v-col cols="8">
+                            <v-list-item-title>
+                                {{ category.title }}
+                            </v-list-item-title>
+                        </v-col>
 
-                            <v-col cols="4" class="text-right">
-                                <v-btn icon @click="editCategory(parentIndex)" class="mr-2">
-                                    <v-icon color="grey-lighten-0">mdi-pencil</v-icon>
-                                </v-btn>
-                                <v-btn icon @click="deleteCategory(parentIndex, '해당 카테고리, 하위 카테고리, 하위 게시물이 모두 삭제됩니다. 삭제하시겠습니까?')">
-                                    <v-icon color="grey-lighten-0">mdi-delete</v-icon>
-                                </v-btn>
-                            </v-col>
-                        </v-row>
-                        <VueDraggableNext
-                                class="dragArea list-group w-full inner-draggable"
-                                :list="category.childCategoryResponses"
-                                ghost-class="ghost-card"
-                                :animation="200"
-                                @end="dragEnd"
-                                :move="checkMove"
-                                group="group"
+                        <v-col cols="4" class="text-right">
+                            <v-btn icon @click="editCategory(parentIndex)" class="mr-2">
+                                <v-icon color="grey-lighten-0">mdi-pencil</v-icon>
+                            </v-btn>
+                            <v-btn icon @click="deleteCategory(parentIndex, '해당 카테고리, 하위 카테고리, 하위 게시물이 모두 삭제됩니다. 삭제하시겠습니까?')">
+                                <v-icon color="grey-lighten-0">mdi-delete</v-icon>
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+                    <VueDraggableNext
+                            class="dragArea list-group w-full inner-draggable"
+                            :list="category.childCategoryResponses"
+                            ghost-class="ghost-card"
+                            :animation="200"
+                            @end="dragEnd"
+                            :move="checkMove"
+                            group="group"
+                    >
+                        <v-list-item
+                                v-for="(childCategory, childIndex) in category.childCategoryResponses"
+                                :key="childCategory.categoryId !== -1 ? childCategory.categoryId : childCategory.tempId"
+                                class="mt-3 cursor-move cursor-pointer"
                         >
-<!--                            <transition-group name="fade" tag="v-list">-->
-                                <v-list-item
-                                        v-for="(childCategory, childIndex) in category.childCategoryResponses"
-                                        :key="childCategory.categoryId !== -1 ? childCategory.categoryId : childCategory.tempId"
-                                        class="mt-3 cursor-move cursor-pointer"
-                                >
-                                    <v-card variant="tonal" class="card-padding">
-                                        <v-row>
-                                            <v-col cols="8">
-                                                <v-list-item-title>
-                                                    {{ childCategory.title }}
-                                                </v-list-item-title>
-                                            </v-col>
-                                            <v-col cols="4" class="text-right">
-                                                <v-btn icon @click="editChildCategory(category, parentIndex, childIndex)" class="mr-2">
-                                                    <v-icon color="grey-lighten-0">mdi-pencil</v-icon>
-                                                </v-btn>
-
-                                                <v-btn icon @click="deleteChildCategory(category, childIndex, '해당 카테고리 하위 게시물이 모두 삭제됩니다. 삭제하시겠습니까?')">
-                                                    <v-icon color="grey-lighten-0">mdi-delete</v-icon>
-                                                </v-btn>
-                                            </v-col>
-                                        </v-row>
-                                    </v-card>
-                                </v-list-item>
-<!--                            </transition-group>-->
-                        </VueDraggableNext>
-                    </v-card>
-
-                </v-list-item>
-<!--            </transition-group>-->
+                            <v-card variant="tonal" class="card-padding">
+                                <v-row>
+                                    <v-col cols="8">
+                                        <v-list-item-title>
+                                            {{ childCategory.title }}
+                                        </v-list-item-title>
+                                    </v-col>
+                                    <v-col cols="4" class="text-right">
+                                        <v-btn icon @click="editChildCategory(category, parentIndex, childIndex)"
+                                               class="mr-2">
+                                            <v-icon color="grey-lighten-0">mdi-pencil</v-icon>
+                                        </v-btn>
+                                        <v-btn icon
+                                               @click="deleteChildCategory(category, childIndex, '해당 카테고리 하위 게시물이 모두 삭제됩니다. 삭제하시겠습니까?')">
+                                            <v-icon color="grey-lighten-0">mdi-delete</v-icon>
+                                        </v-btn>
+                                    </v-col>
+                                </v-row>
+                            </v-card>
+                        </v-list-item>
+                    </VueDraggableNext>
+                </v-card>
+            </v-list-item>
         </VueDraggableNext>
-<!--        카테고리 추가 다이얼로그 -->
+        <!--        카테고리 추가 다이얼로그 -->
         <v-dialog
                 v-model="addDialog"
                 width="auto"
@@ -116,19 +105,19 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-<!--        카테고리 수정 다이얼로그-->
+        <!--        카테고리 수정 다이얼로그-->
         <v-dialog
-            v-model="editDialog"
-            width="auto"
+                v-model="editDialog"
+                width="auto"
         >
             <v-card>
                 <v-card-text>
-                    카테고리 제목을 입력해주세요.
+                    수정 할 카테고리 제목을 입력해주세요.
                 </v-card-text>
                 <v-text-field
-                    label="카테고리 제목"
-                    v-model="newCategoryTitle"
-                    required
+                        label="카테고리 제목"
+                        v-model="newCategoryTitle"
+                        required
                 ></v-text-field>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -143,14 +132,6 @@
                     persistent
                     width="auto"
             >
-                <!--                <template v-slot:activator="{ props }">-->
-                <!--                    <v-btn-->
-                <!--                            color="primary"-->
-                <!--                            v-bind="props"-->
-                <!--                    >-->
-                <!--                        Open Dialog-->
-                <!--                    </v-btn>-->
-                <!--                </template>-->
                 <v-card>
                     <v-card-title class="text-h5">
                         {{ confirmDialogMessage }}
@@ -177,20 +158,19 @@
         </v-row>
     </div>
     <div class="extra-space">
-
     </div>
 </template>
 
 <script setup lang="ts">
-import { useCategoryStore } from '@/store/piniaStore'
-import { storeToRefs } from "pinia";
+import {useCategoryStore} from '@/store/piniaStore'
+import {storeToRefs} from "pinia";
 import {ref, onMounted, computed} from "vue";
 import {CategoryResponse} from "@/api/response/responses";
-import {VueDraggableNext} from 'vue-draggable-next'
+import {VueDraggableNext} from 'vue-draggable-next';
 
 const store = useCategoryStore();
-const { categories } = storeToRefs(store)
-const { setCategories } = store
+const {categories} = storeToRefs(store)
+const {setCategories, updateCategories} = store
 
 const tmpCategories = ref<CategoryResponse[]>([]);
 const newCategoryTitle = ref<string>("");
@@ -200,6 +180,9 @@ const confirmDialogMessage = ref<string>("");
 const editDialog = ref<boolean>(false);
 const editParentIndex = ref<number>(-1);
 const editChildIndex = ref<number>(-1);
+const alert = ref<boolean>(false);
+const alertMessage = ref<string>("");
+const removedCategoryIds = ref<number[]>([]);
 
 let confirmCallback: () => void;
 
@@ -208,22 +191,40 @@ let isSaveDisabled = computed(() => {
 });
 
 onMounted(async () => {
-    await setCategories();
+    // 현재 이 페이지에서 categoryStore에 업데이트 하는중 나중에는 빼도 될듯
+    await setCategories()
     tmpCategories.value = JSON.parse(JSON.stringify(categories.value));
 })
 
-const cancel = () => {
+const save = async () => {
+    const categoryRequest = tmpCategories.value.map(parentCategory => {
+        return {
+            categoryId: parentCategory.categoryId,
+            title: parentCategory.title,
+            childCategories: parentCategory.childCategoryResponses ? parentCategory.childCategoryResponses.map(childCategory => {
+                return {
+                    categoryId: childCategory.categoryId,
+                    title: childCategory.title
+                }
+            }) : undefined
+        }
+    });
+    await updateCategories(categoryRequest, removedCategoryIds.value);
     tmpCategories.value = JSON.parse(JSON.stringify(categories.value));
 }
 
+const cancel = () => {
+    tmpCategories.value = JSON.parse(JSON.stringify(categories.value));
+    removedCategoryIds.value = [];
+}
+
 const addCategory = () => {
-    const newCategory: { childCategoryResponses: any[]; title: string; categoryId: number; tempId: string} = {
+    const newCategory: { childCategoryResponses: any[]; title: string; categoryId: number; tempId: string } = {
         categoryId: -1,
         title: newCategoryTitle.value,
         childCategoryResponses: [],
         tempId: Date.now().toString()
     };
-
     tmpCategories.value.push(newCategory);
     newCategoryTitle.value = '';
     addDialog.value = false;
@@ -256,6 +257,7 @@ const editCategoryTitle = () => {
 const deleteCategory = (index: number, message: string) => {
     confirmDialogMessage.value = message
     confirmCallback = () => {
+        removedCategoryIds.value.push(tmpCategories.value[index].categoryId);
         tmpCategories.value.splice(index, 1);
     };
     confirmDialog.value = true;
@@ -285,41 +287,30 @@ const deleteChildCategory = (category: any, index: number, message: string) => {
         confirmDialogMessage.value = message + ' (하위 게시물이 없습니다.)';
     }
     confirmCallback = () => {
+        removedCategoryIds.value.push(category.childCategoryResponses[index].categoryId);
         category.childCategoryResponses.splice(index, 1);
     };
     confirmDialog.value = true;
 };
 
-const checkMove = () => {
+const checkMove = (event: any) => {
     // 움직일 때마다 반환됨
-    // if (event.draggedContext.element.title === '카테고리1') {
-    //     return false;
-    // } else {
-    //     console.log('event', event.draggedContext.element)
-    // }
-    // event.relatedContext.element.title
-
-    /*
-    draggedContext 끌어가는 요소
-    relatedContext 끌려가서 현재 요소
-    */
-
-
+    if (event.draggedContext.element.has) {
+        alertWarning("게시물이 존재 합니다. 상위카테고리로 이동시 게시물이 보이지 않습니다.");
+    }
+    if (event.draggedContext.element.childCategoryResponses.length > 0) {
+        alertWarning("하위 카테고리가 존재 합니다. 다른 카테고리로 이동하고 저장시 하위의 카테고리가 삭제됩니다.");
+    }
     return true;
 };
 
-const dragAndAdd = (event) => {
-    //
-    // if (event.removed.element.hasPost !== null && event.removed.element.hasPost === true && event.added.element.hasPost === false) {
-    //     //
-    // }
+const alertWarning = (title: string) => {
+    alertMessage.value = title;
+    alert.value = true;
 }
 
 const dragEnd = () => {
-    console.log('response', categories)
-    console.log('tmp', tmpCategories.value);
-    // save the new order of tmpCategories
-    // possibly make an API call to update the order on your backend
+    alert.value = false
 };
 </script>
 
@@ -359,5 +350,12 @@ const dragEnd = () => {
 
 .extra-space {
     height: 100px;
+}
+
+.v-alert {
+    position: fixed;
+    left: 50%;
+    bottom: 50%;
+    transform: translate(-50%, -50%);
 }
 </style>

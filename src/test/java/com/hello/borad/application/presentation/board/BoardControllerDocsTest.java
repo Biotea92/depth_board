@@ -213,7 +213,6 @@ class BoardControllerDocsTest {
                                 fieldWithPath("parentCategories[].childCategories[].title").description("자식 category title"),
                                 fieldWithPath("parentCategories[].childCategories[].childCategories").description("빈 리스트[] 거나 null 이어야 합니다."),
                                 fieldWithPath("removedCategoryIds").description("삭제 할 카테고리 Ids")
-
                         ),
                         responseFields(
                                 fieldWithPath("[].categoryId").description("대분류 category id"),

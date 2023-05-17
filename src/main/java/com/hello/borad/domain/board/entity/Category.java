@@ -60,12 +60,14 @@ public class Category {
         this.title = title;
         this.depth = depth;
         this.sequence = sequence;
+        this.parentCategory = null;
     }
 
     public void update(String title, int depth, int sequence, Category parentCategory) {
         this.title = title;
         this.depth = depth;
         this.sequence = sequence;
+        this.parentCategory = parentCategory;
         parentCategory.childCategories.add(this);
     }
 

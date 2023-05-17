@@ -8,6 +8,8 @@ import com.hello.borad.dto.response.CategoryResponse;
 import com.hello.borad.dto.response.ParentCategoryResponse;
 import com.hello.borad.dto.response.PostResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
