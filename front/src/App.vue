@@ -22,7 +22,7 @@
 
                 <v-divider></v-divider>
 
-                <v-list v-for="category in categoryResponses" :key="category.categoryId">
+                <v-list v-for="category in categories" :key="category.categoryId">
                     <v-list-group
                             :value="category.title"
                     >
@@ -53,19 +53,19 @@
 </template>
 
 <script setup lang="ts">
-import categoryApi from "@/api/categoryApi";
-import {ref, onMounted, onUpdated} from "vue";
-import {CategoryResponse} from "@/api/response/responses";
+import { onMounted } from "vue";
 import router from "@/router";
+import { useCategoryStore } from '@/store/piniaStore'
+import { storeToRefs } from "pinia";
 
-const categoryResponses = ref<CategoryResponse[]>([]);
+const store = useCategoryStore();
+const { categories } = storeToRefs(store)
+const { setCategories } = store
 
 onMounted(async () => {
-    categoryResponses.value = await categoryApi.getCategories();
+    await setCategories();
 })
-onUpdated(async () => {
-    categoryResponses.value = await categoryApi.getCategories();
-})
+
 const navigateTo = (to) => {
     router.push(to);
 }

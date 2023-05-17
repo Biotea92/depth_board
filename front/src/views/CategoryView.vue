@@ -182,33 +182,38 @@
 </template>
 
 <script setup lang="ts">
-import categoryApi from "@/api/categoryApi";
+import { useCategoryStore } from '@/store/piniaStore'
+import { storeToRefs } from "pinia";
 import {ref, onMounted, computed} from "vue";
 import {CategoryResponse} from "@/api/response/responses";
 import {VueDraggableNext} from 'vue-draggable-next'
 
-const categoryResponses = ref<CategoryResponse[]>([]);
+const store = useCategoryStore();
+const { categories } = storeToRefs(store)
+const { setCategories } = store
+
 const tmpCategories = ref<CategoryResponse[]>([]);
 const newCategoryTitle = ref<string>("");
 const addDialog = ref<boolean>(false);
 const confirmDialog = ref<boolean>(false);
 const confirmDialogMessage = ref<string>("");
-let confirmCallback: () => void;
 const editDialog = ref<boolean>(false);
 const editParentIndex = ref<number>(-1);
 const editChildIndex = ref<number>(-1);
 
+let confirmCallback: () => void;
+
 let isSaveDisabled = computed(() => {
-    return JSON.stringify(categoryResponses.value) !== JSON.stringify(tmpCategories.value);
+    return JSON.stringify(categories.value) !== JSON.stringify(tmpCategories.value);
 });
 
 onMounted(async () => {
-    categoryResponses.value = await categoryApi.getCategories();
-    tmpCategories.value = JSON.parse(JSON.stringify(categoryResponses.value));
+    await setCategories();
+    tmpCategories.value = JSON.parse(JSON.stringify(categories.value));
 })
 
 const cancel = () => {
-    tmpCategories.value = JSON.parse(JSON.stringify(categoryResponses.value));
+    tmpCategories.value = JSON.parse(JSON.stringify(categories.value));
 }
 
 const addCategory = () => {
@@ -242,6 +247,7 @@ const editCategoryTitle = () => {
         }
         newCategoryTitle.value = '';
         editDialog.value = false;
+        editParentIndex.value = -1;
     } else {
         editChildCategoryTitle()
     }
@@ -268,6 +274,7 @@ const editChildCategoryTitle = () => {
     }
     newCategoryTitle.value = '';
     editDialog.value = false;
+    editParentIndex.value = -1;
     editChildIndex.value = -1;
 }
 
@@ -303,13 +310,13 @@ const checkMove = () => {
 
 const dragAndAdd = (event) => {
     //
-    if (event.removed.element.hasPost !== null && event.removed.element.hasPost === true && event.added.element.hasPost === false) {
-        //
-    }
+    // if (event.removed.element.hasPost !== null && event.removed.element.hasPost === true && event.added.element.hasPost === false) {
+    //     //
+    // }
 }
 
 const dragEnd = () => {
-    console.log('response', categoryResponses.value)
+    console.log('response', categories)
     console.log('tmp', tmpCategories.value);
     // save the new order of tmpCategories
     // possibly make an API call to update the order on your backend
