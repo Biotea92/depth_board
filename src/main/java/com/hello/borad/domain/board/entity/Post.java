@@ -42,6 +42,7 @@ public class Post {
         this.title = title;
         this.content = content;
         this.category = category;
+        category.updateHasPost();
     }
 
     public static Post create(String title, String content, Category category) {

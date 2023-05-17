@@ -74,4 +74,8 @@ public class Category {
     public boolean isDepthTwo() {
         return this.depth == 2;
     }
+
+    public void updateHasPost() {
+        this.hasPost = true;
+    }
 }
