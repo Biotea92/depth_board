@@ -1,5 +1,5 @@
 import axios from "axios";
-import {CategoryResponse} from "@/api/response/responses";
+import {CategoryResponse, PostResponse} from "@/api/response/responses";
 import {CategoryRequest} from "@/api/request/requests";
 
 const API_BASE_URL = 'http://localhost:8081/api/board';
@@ -13,7 +13,6 @@ export default {
                 throw error;
             });
     },
-
     putCategories(parentCategories: CategoryRequest[], removedCategoryIds: number[]): Promise<CategoryResponse[]> {
         return axios.put(`${API_BASE_URL}/category`, {
             "parentCategories": parentCategories,
@@ -25,6 +24,14 @@ export default {
                 }
                 return [];
             })
+            .catch((error) => {
+                console.log(error);
+                throw error;
+            });
+    },
+    getPosts(postId: number): Promise<PostResponse[]> {
+        return axios.get(`${API_BASE_URL}/category/{postId}/posts`)
+            .then((response) => response.data)
             .catch((error) => {
                 console.log(error);
                 throw error;

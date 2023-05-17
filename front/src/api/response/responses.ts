@@ -7,3 +7,11 @@ export interface CategoryResponse {
     childCategoryResponses?: CategoryResponse[];
     tempId?: string;
 }
+
+export interface PostResponse {
+    postId: number;
+    title: string;
+    content: string;
+    createAt: string;
+    categoryResponse?: CategoryResponse
+}

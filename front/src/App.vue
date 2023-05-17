@@ -37,6 +37,7 @@
                                 v-for="childCategory in category.childCategoryResponses"
                                 :key="childCategory.categoryId"
                                 :value="childCategory.title"
+                                @click="() => navigateTo('/board/' + childCategory.categoryId)"
                         >
                             <v-list-item-title>
                                 {{ childCategory.title }}
@@ -57,16 +58,17 @@ import { onMounted } from "vue";
 import router from "@/router";
 import { useCategoryStore } from '@/store/piniaStore'
 import { storeToRefs } from "pinia";
+import {CategoryResponse} from "@/api/response/responses";
 
 const store = useCategoryStore();
-const { categories } = storeToRefs(store)
+const { categories }: { categories: any } = storeToRefs(store);
 const { setCategories } = store
 
 onMounted(async () => {
     await setCategories();
 })
 
-const navigateTo = (to) => {
+const navigateTo = (to: string) => {
     router.push(to);
 }
 </script>
