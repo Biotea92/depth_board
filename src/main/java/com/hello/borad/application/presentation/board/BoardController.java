@@ -37,8 +37,9 @@ public class BoardController {
     }
 
     @PutMapping("/category")
-    public List<ParentCategoryResponse> editCategories(@RequestBody @Validated CategoryEditRequest request) {
-        return editCategoriesUsecase.execute(request);
+    public ResponseEntity<Void> editCategories(@RequestBody @Validated CategoryEditRequest request) {
+        editCategoriesUsecase.execute(request);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping("/category/{categoryId}/post")

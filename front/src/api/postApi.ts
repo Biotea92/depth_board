@@ -13,7 +13,6 @@ export default {
                 throw error;
             });
     },
-
     createPost(categoryId: number, postRequest: PostRequest): Promise<void> {
         return axios.post(`${API_BASE_URL}/category/${categoryId}/post`, {
             "title": postRequest.title,

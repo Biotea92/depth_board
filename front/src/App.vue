@@ -55,7 +55,6 @@
 
 <script setup lang="ts">
 import {onMounted} from "vue";
-import router from "@/router";
 import {useCategoryStore} from '@/store/piniaStore'
 import {storeToRefs} from "pinia";
 

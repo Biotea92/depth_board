@@ -4,12 +4,10 @@ import com.hello.borad.domain.board.entity.Category;
 import com.hello.borad.domain.board.service.CategoryWriteService;
 import com.hello.borad.dto.request.CategoryEditRequest;
 import com.hello.borad.dto.request.CategoryEditRequest.ParentCategoryEditRequest;
-import com.hello.borad.dto.response.ParentCategoryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,20 +18,16 @@ public class EditCategoriesUsecase {
     private final CategoryWriteService categoryWriteService;
 
     @Transactional
-    public List<ParentCategoryResponse> execute(CategoryEditRequest request) {
-        LinkedList<Category> categories = new LinkedList<>();
-        registerOrUpdateCategories(request.parentCategories(), categories);
+    public void execute(CategoryEditRequest request) {
+        registerOrUpdateCategories(request.parentCategories());
         removeCategories(request.removedCategoryIds());
-        return categories.stream()
-                .map(ParentCategoryResponse::from)
-                .toList();
+
     }
 
-    private void registerOrUpdateCategories(List<ParentCategoryEditRequest> parents, LinkedList<Category> categories) {
+    private void registerOrUpdateCategories(List<ParentCategoryEditRequest> parents) {
         AtomicInteger parentSequence = new AtomicInteger(0);
         parents.forEach(parent -> {
             Category parentCategory = registerOrUpdateParent(parentSequence, parent);
-            categories.add(parentCategory);
             registerOrUpdateChild(parent, parentCategory);
         });
     }

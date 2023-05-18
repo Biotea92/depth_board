@@ -299,7 +299,7 @@ const checkMove = (event: any) => {
     alertWarning("게시물이 존재 합니다. 상위카테고리로 이동시 게시물이 보이지 않습니다.");
   }
   if (event.draggedContext.element.childCategoryResponses.length > 0) {
-    alertWarning("하위 카테고리가 존재 합니다. 다른 카테고리로 이동하고 저장시 하위의 카테고리가 삭제됩니다.");
+    alertWarning("하위 카테고리가 존재 합니다. 다른 카테고리로 이동시 하위의 카테고리가 보이지 않습니다.");
   }
   return true;
 };

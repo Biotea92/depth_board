@@ -195,8 +195,6 @@ class BoardControllerDocsTest {
         );
         String json = objectMapper.writeValueAsString(request);
 
-        System.out.println(json);
-
         // expected
         mockMvc.perform(put("/api/board/category")
                         .contentType(APPLICATION_JSON)
